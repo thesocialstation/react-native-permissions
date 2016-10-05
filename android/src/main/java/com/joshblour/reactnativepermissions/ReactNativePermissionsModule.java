@@ -10,7 +10,6 @@ import android.support.v4.content.PermissionChecker;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
-import com.facebook.react.bridge.PromiseImpl;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -80,19 +79,13 @@ public class ReactNativePermissionsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void requestPermission(final String permissionString, String nullForiOSCompat, final Promise promise) {
     String permission = permissionForString(permissionString);
-    Callback resolve = new Callback() {
+    mPermissionsModule.requestPermission(permission, new Callback() {
       @Override
       public void invoke(Object... args) {
         getPermissionStatus(permissionString, promise);
+//        promise.resolve((boolean)args[1] ? "authorized" : "denied");
       }
-    };
-    Callback reject = new Callback() {
-      @Override
-      public void invoke(Object... args) {
-        // NOOP
-      }
-    };
-    mPermissionsModule.requestPermission(permission, new PromiseImpl(resolve, reject));
+    }, null);
   }
 
 
